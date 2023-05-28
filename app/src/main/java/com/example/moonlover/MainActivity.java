@@ -1,67 +1,86 @@
 package com.example.moonlover;
 
 import androidx.appcompat.app.AppCompatActivity;
-
-import android.app.DatePickerDialog;
-import android.content.Context;
 import android.content.Intent;
-import android.media.MediaPlayer;
 import android.os.Bundle;
-import android.view.View;
 import android.widget.Button;
-import android.widget.DatePicker;
-import android.widget.TextView;
+import android.widget.ImageButton;
+import android.widget.ImageView;
 
-import java.util.Calendar;
+import com.bumptech.glide.Glide;
 
 public class MainActivity extends AppCompatActivity {
 
-    Intent musicIntent;
-
+    private ImageButton pauseButton;
+    private Intent music;
+    private boolean isMusicPlaying = true;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-//        musicIntent = new Intent(this, MusicPlayer.class);
-//        startService(musicIntent);
-        MediaPlayer mediaPlayer = MediaPlayer.create(this, R.raw.borismoon);
-        MusicThread musicThread = new MusicThread(mediaPlayer);
-        musicThread.start();
+        ImageView backgroundImageView = findViewById(R.id.imageBackground);
+        Glide.with(this).asGif().load(R.drawable.andromeda_animated).into(backgroundImageView);
 
-        Button btnLets = (Button) findViewById(R.id.btnLetsStart);
-        btnLets.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                openMainPage();
-            }
+
+        music = new Intent(this, MusicService.class);
+        startService(music);
+
+
+        Button btnLets = findViewById(R.id.btnLetsStart);
+        btnLets.setOnClickListener(v -> {
+            openMainPage();
         });
+
+        pauseButton = findViewById(R.id.imgbSoundButton);
+        pauseButton.setOnClickListener(v -> {
+            Intent pauseIntent = new Intent(this, MusicService.class);
+            if (isMusicPlaying) {
+                pauseIntent.setAction("com.example.moonlover.ACTION_MUTE");
+//                pauseButton.setImageResource(R.drawable.muted);
+                pauseButton.setImageResource(android.R.drawable.ic_lock_silent_mode);
+                isMusicPlaying = false;
+            } else {
+                pauseIntent.setAction("com.example.moonlover.ACTION_UNMUTE");
+                pauseButton.setImageResource(android.R.drawable.ic_lock_silent_mode_off);
+                Intent resumeIntent = new Intent(this, MusicService.class);
+                startService(resumeIntent);
+                isMusicPlaying = true;
+            }
+            startService(pauseIntent);
+        });
+
+
     }
 
-    public void openMainPage(){
-        Intent openMain = new Intent(this,intoMenu.class);
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        Intent resumeIntent = new Intent(this, MusicService.class);
+        resumeIntent.setAction("com.example.moonlover.ACTION_PLAY");
+        startService(resumeIntent);
+    }
+
+    @Override
+    protected void onPause() {
+        super.onPause();
+        Intent intent = new Intent(this, MusicService.class);
+        intent.setAction("com.example.moonlover.ACTION_PAUSE");
+        startService(intent);
+    }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        stopService(music);
+    }
+
+    public void openMainPage() {
+        Intent openMain = new Intent(this, Calculated.class);
         startActivity(openMain);
-
-    }
-    private void showDatePickerDialog(final TextView dateTextView) {
-        final Calendar calendar = Calendar.getInstance();
-        int year = calendar.get(Calendar.YEAR);
-        int month = calendar.get(Calendar.MONTH);
-        int dayOfMonth = calendar.get(Calendar.DAY_OF_MONTH);
-
-        DatePickerDialog datePickerDialog = new DatePickerDialog(
-                this,
-                new DatePickerDialog.OnDateSetListener() {
-                    @Override
-                    public void onDateSet(DatePicker view, int year, int monthOfYear, int dayOfMonth) {
-                        // Ustawienie wybranej daty w elemencie TextView
-                        String selectedDate = dayOfMonth + "/" + (monthOfYear + 1) + "/" + year;
-                        dateTextView.setText(selectedDate);
-                    }
-                },
-                year, month, dayOfMonth);
-        datePickerDialog.show();
+        overridePendingTransition(R.anim.slide_in_right, R.anim.slide_out_left);
     }
 
 

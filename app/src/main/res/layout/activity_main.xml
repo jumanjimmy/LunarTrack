@@ -4,48 +4,60 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@drawable/moon"
     tools:context=".MainActivity">
+
+    <ImageView
+        android:id="@+id/imageBackground"
+        android:layout_width="800dp"
+        android:layout_height="1200dp"
+        android:foregroundGravity="bottom"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.467"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:srcCompat="@drawable/andromeda_animated" />
 
     <TextView
         android:id="@+id/imgCubaJong"
-        android:layout_width="161dp"
-        android:layout_height="35dp"
+        android:layout_width="114dp"
+        android:layout_height="26dp"
         android:background="@drawable/cubajong"
         android:textColor="#979A9A"
         android:textSize="5sp"
-        android:typeface="serif"
+        android:foregroundGravity="top"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.018"
+        app:layout_constraintHorizontal_bias="0.0"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.963" />
+        app:layout_constraintVertical_bias="0.964" />
 
     <TextView
         android:id="@+id/imgLunarTrack"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
+        android:layout_width="379dp"
+        android:layout_height="65dp"
         android:background="@drawable/lunar"
         android:textColor="#979A9A"
         android:textSize="50sp"
         android:typeface="serif"
+        android:foregroundGravity="top"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.2"
+        app:layout_constraintHorizontal_bias="0.531"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintVertical_bias="0.024" />
 
-
-
     <androidx.appcompat.widget.AppCompatButton
         android:id="@+id/btnLetsStart"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:background="@android:drawable/button_onoff_indicator_off"
-        android:text="Let's get started"
+        android:layout_width="160dp"
+        android:layout_height="56dp"
+        android:background="@drawable/btnbackground"
+        android:text="TRY IT"
         android:textColor="#000000"
+        android:textSize="25sp"
+        android:foregroundGravity="top"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.943"
@@ -55,16 +67,19 @@
 
     <ImageButton
         android:id="@+id/imgbSoundButton"
-        android:layout_width="53dp"
-        android:layout_height="61dp"
-        android:alpha="0.2"
+        android:layout_width="55dp"
+        android:layout_height="63dp"
+        android:background="@null"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.011"
+        app:layout_constraintHorizontal_bias="0.0"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.894"
+        app:layout_constraintVertical_bias="0.923"
+        android:foregroundGravity="top"
         app:srcCompat="@android:drawable/ic_lock_silent_mode_off" />
+
+
 
 
 </androidx.constraintlayout.widget.ConstraintLayout>
