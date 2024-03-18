@@ -1,19 +1,32 @@
 package com.example.moonlover;
 
 
+
+import static com.example.moonlover.MoonPhases.getMoonPhaseName;
+import static com.example.moonlover.Settings.PREF_LANGUAGE;
+
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
+import androidx.preference.PreferenceManager;
 
+import android.app.AlertDialog;
 import android.app.DatePickerDialog;
 import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
+import android.content.res.Configuration;
+import android.content.res.Resources;
 import android.location.Location;
 import android.location.LocationManager;
 import android.os.Bundle;
 import android.view.GestureDetector;
 import android.view.MotionEvent;
+import android.view.View;
+import android.view.animation.Animation;
+import android.view.animation.AnimationUtils;
+import android.widget.Button;
 import android.widget.DatePicker;
 import android.widget.ImageButton;
 import android.widget.ImageView;
@@ -21,23 +34,41 @@ import android.widget.TextView;
 import android.widget.Toast;
 import android.Manifest;
 
+import java.time.Instant;
 import java.time.LocalDate;
-import java.time.LocalDateTime;
 import java.time.ZoneId;
 import java.time.ZonedDateTime;
 import java.time.format.DateTimeFormatter;
+import java.time.temporal.ChronoUnit;
 import java.util.Calendar;
+import java.util.Date;
+import java.util.Locale;
+import java.util.Random;
+
 import org.shredzone.commons.suncalc.MoonTimes;
 
 public class Calculated extends AppCompatActivity {
 
 
-
     private TextView txtDate, txtMoonPhase, txtMoonRise, txtMoonSet;
     private ImageView moonPhoto;
-    ImageButton leftButton, rightButton;
+    ImageButton leftButton, rightButton, btnBack, factButton;
     private Calendar calendar;
     private GestureDetector mGestureDetector;
+    private LocalDate date;
+
+    private final int[] ciekawostki = {
+            R.string.fact1,
+            R.string.fact2,
+            R.string.fact3,
+            R.string.fact4,
+            R.string.fact5,
+            R.string.fact6,
+            R.string.fact8,
+            R.string.fact9,
+            R.string.fact10,
+            // Dodaj więcej identyfikatorów stringów tutaj
+    };
 
 
     @Override
@@ -45,38 +76,77 @@ public class Calculated extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_calculated);
 
+        String savedLanguage = getSavedLanguage();
+        setLanguage(savedLanguage);
+
+        ImageView arrow = findViewById(R.id.arrow);
+        arrow.setVisibility(View.GONE);
+        Animation arrowAppear = AnimationUtils.loadAnimation(getApplicationContext(), R.anim.fade_in);
+        Animation arrowSlide = AnimationUtils.loadAnimation(getApplicationContext(), R.anim.arrow_vertical);
+        arrowAppear.setAnimationListener(new Animation.AnimationListener() {
+            @Override
+            public void onAnimationStart(Animation animation) {
+                arrow.setVisibility(View.VISIBLE);
+            }
+
+            @Override
+            public void onAnimationEnd(Animation animation) {
+                arrow.startAnimation(arrowSlide);
+                arrow.setVisibility(View.GONE);
+            }
+
+            @Override
+            public void onAnimationRepeat(Animation animation) {
+            }
+        });
+
+        arrow.startAnimation(arrowAppear);
+
+        ImageView finger = findViewById(R.id.fingerSwipe);
+        finger.setVisibility(View.GONE);
+
+        ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.ACCESS_FINE_LOCATION}, 1);
+
+
+        factButton = findViewById(R.id.factButton);
+        factButton.setOnClickListener(v -> showRandomFact());
+
+
+
         mGestureDetector = new GestureDetector(this, new MyGestureListener());
         calendar = Calendar.getInstance();
         txtMoonPhase = findViewById(R.id.txtMoonPhase);
         moonPhoto = findViewById(R.id.moonPhoto);
+
         txtDate = findViewById(R.id.Data);
         txtDate.setOnClickListener(view -> showDatePickerDialog(txtDate));
+
         txtMoonRise = findViewById(R.id.txtRise);
         txtMoonSet = findViewById(R.id.txtSet);
 
 
-
         leftButton = findViewById(R.id.btnLeft);
         leftButton.setOnClickListener(view -> {
-            calendar.add(Calendar.DAY_OF_MONTH, -1);
-            updateSelectedDate();
-            updateMoonImage();
-            updateMoonTimes();
+            moveToLeftDay();
         });
 
 
         rightButton = findViewById(R.id.btnRight);
         rightButton.setOnClickListener(v -> {
-            calendar.add(Calendar.DAY_OF_MONTH, 1);
-            updateSelectedDate();
-            updateMoonImage();
-            updateMoonTimes();
+            moveToRightDay();
         });
 
+        btnBack = findViewById(R.id.btn_back);
+        btnBack.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                openMainPage();
+            }
+        });
     }
 
-    private void showDatePickerDialog(final TextView txtDate) {
 
+    private void showDatePickerDialog(final TextView txtDate) {
         final Calendar calendar = Calendar.getInstance();
         int year = calendar.get(Calendar.YEAR);
         int month = calendar.get(Calendar.MONTH);
@@ -89,19 +159,85 @@ public class Calculated extends AppCompatActivity {
                     public void onDateSet(DatePicker view, int year, int monthOfYear, int dayOfMonth) {
                         String selectedDate = dayOfMonth + "/" + (monthOfYear + 1) + "/" + year;
                         txtDate.setText(selectedDate);
-                        LocalDate date = LocalDate.of(year, monthOfYear + 1, dayOfMonth);
-                        MoonPhase moonPhase = MoonPhase.fromDate(date);
-                        double phase = moonPhase.calculatePhase();
-                        String phaseName = MoonPhase.getMoonPhaseName(phase);
+                        date = LocalDate.of(year, monthOfYear + 1, dayOfMonth);
+                        MoonPhases moonPhases = MoonPhases.fromDate(date);
+                        double phase = moonPhases.calculatePhase();
+                        String phaseName = getMoonPhaseName(getApplicationContext(), phase);
                         txtMoonPhase.setText(phaseName);
                         moonPhoto.setImageResource(getResources().getIdentifier(getMoonImage(phase), "drawable", getPackageName()));
-                        updateMoonTimes();
+                        updateMoonTimes(date);
+
+                        ImageView finger = findViewById(R.id.fingerSwipe);
+                        Animation fingerAppear = AnimationUtils.loadAnimation(getApplicationContext(), R.anim.fade_in);
+                        Animation fingerSlide = AnimationUtils.loadAnimation(getApplicationContext(), R.anim.finger_swipe);
+
+                        fingerAppear.setAnimationListener(new Animation.AnimationListener() {
+                            @Override
+                            public void onAnimationStart(Animation animation) {
+                                finger.setVisibility(View.VISIBLE);
+                            }
+
+                            @Override
+                            public void onAnimationEnd(Animation animation) {
+                                finger.startAnimation(fingerSlide);
+                                finger.setVisibility(View.GONE);
+                            }
+
+                            @Override
+                            public void onAnimationRepeat(Animation animation) {
+                            }
+                        });
+
+
+                        finger.startAnimation(fingerAppear);
+                        Toast.makeText(Calculated.this, "Swipe to switch days!", Toast.LENGTH_LONG).show();
+
+
+                        int daysToNextFullMoon = findNextFullMoonDays(date);
+                        TextView txtNextMoon = findViewById(R.id.nextMoon);
+                        String daysToFullMoonString = getString(R.string.days_to_full) + " " + daysToNextFullMoon;
+                        txtNextMoon.setText(daysToFullMoonString);
                     }
                 },
                 year, month, dayOfMonth);
         datePickerDialog.show();
     }
 
+    private int findNextFullMoonDays(LocalDate currentDate) {
+        int daysToNextFullMoon = 0;
+        double phase;
+        LocalDate nextDate = currentDate;
+
+        do {
+            nextDate = nextDate.plusDays(1);
+            MoonPhases moonPhases = MoonPhases.fromDate(nextDate);
+            phase = moonPhases.calculatePhase();
+            daysToNextFullMoon++;
+        } while (phase < 0.5 || phase > 0.54);
+
+        return daysToNextFullMoon;
+    }
+
+private void updateDaysToNextFullMoon(LocalDate date) {
+    int daysToNextFullMoon = findNextFullMoonDays(date);
+    TextView txtNextMoon = findViewById(R.id.nextMoon);
+    String daysToFullMoonString = getString(R.string.days_to_full) + " " + daysToNextFullMoon;
+    txtNextMoon.setText(daysToFullMoonString);
+
+}
+    public void setLanguage(String languageCode){
+        Resources resources = this.getResources();
+        Configuration configuration = resources.getConfiguration();
+        Locale locale = new Locale(languageCode);
+        locale.setDefault(locale);
+        configuration.setLocale(locale);
+        resources.updateConfiguration(configuration,
+                resources.getDisplayMetrics());
+    }
+    public String getSavedLanguage() {
+        SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(this);
+        return sharedPreferences.getString(PREF_LANGUAGE, "");
+    }
 
     @Override
     public boolean onTouchEvent(MotionEvent event) {
@@ -112,50 +248,41 @@ public class Calculated extends AppCompatActivity {
     }
 
     private void moveToLeftDay() {
-        calendar.add(Calendar.DAY_OF_MONTH, -1);
-        updateSelectedDate();
-        updateMoonImage();
-        updateMoonTimes();
+        date = date.minusDays(1);
+        updateSelectedDate(date);
+        updateMoonImage(date);
+        updateMoonTimes(date);
+        updateDaysToNextFullMoon(date);
     }
 
     private void moveToRightDay() {
-        calendar.add(Calendar.DAY_OF_MONTH, 1);
-        updateSelectedDate();
-        updateMoonImage();
-        updateMoonTimes();
+        date = date.plusDays(1);
+        updateSelectedDate(date);
+        updateMoonImage(date);
+        updateMoonTimes(date);
+        updateDaysToNextFullMoon(date);
     }
 
 
 
-    private void updateSelectedDate() {
-        // Uaktualnij pole tekstowe z datą na podstawie aktualnej wybranej daty;
-        int year = calendar.get(Calendar.YEAR);
-        int month = calendar.get(Calendar.MONTH);
-        int dayOfMonth = calendar.get(Calendar.DAY_OF_MONTH);
-
-        String selectedDateStr = dayOfMonth + "/" + (month + 1) + "/" + year;
+    private void updateSelectedDate(LocalDate date) {
+        int year = date.getYear();
+        int month = date.getMonthValue();
+        int day = date.getDayOfMonth();
+        String selectedDateStr = day + "/" + (month) + "/" + year;
         txtDate.setText(selectedDateStr);
-//        Toast.makeText(Calculated.this, "Swipe HORIZONTAL to change the date!", Toast.LENGTH_LONG).show();
     }
 
-    private void updateMoonImage() {
-        // Uaktualnij obraz Księżyca na podstawie aktualnej wybranej daty
-        int year = calendar.get(Calendar.YEAR);
-        int month = calendar.get(Calendar.MONTH) + 1;
-        int dayOfMonth = calendar.get(Calendar.DAY_OF_MONTH);
-        LocalDate date = LocalDate.of(year, month, dayOfMonth);
-        MoonPhase moonPhase = MoonPhase.fromDate(date);
-        double phase = moonPhase.calculatePhase();
-        String phaseName = MoonPhase.getMoonPhaseName(phase);
+    private void updateMoonImage(LocalDate date) {
+        MoonPhases moonPhases = MoonPhases.fromDate(date);
+        double phase = moonPhases.calculatePhase();
+        String phaseName = getMoonPhaseName(getApplicationContext(),phase);
         txtMoonPhase.setText(phaseName);
         moonPhoto.setImageResource(getResources().getIdentifier(getMoonImage(phase), "drawable", getPackageName()));
     }
 
-    private void updateMoonTimes() {
-        int year = calendar.get(Calendar.YEAR);
-        int month = calendar.get(Calendar.MONTH) + 1;
-        int dayOfMonth = calendar.get(Calendar.DAY_OF_MONTH);
-        LocalDate date = LocalDate.of(year, month, dayOfMonth);
+    private void updateMoonTimes(LocalDate date) {
+
 
         // Sprawdzenie uprawnień do lokalizacji
         if (ContextCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION)
@@ -180,14 +307,17 @@ public class Calculated extends AppCompatActivity {
                 // Wyświetlamy czasy wschodu i zachodu Księżyca w odpowiednich TextView
                 if (moonRise != null) {
                     String riseTime = moonRise.format(DateTimeFormatter.ofPattern("HH:mm"));
-                    txtMoonRise.setText("Moonrise: \n" + riseTime);
+                    String moonriseText = getString(R.string.moonrise) +"\n"+  riseTime;
+                    txtMoonRise.setText(moonriseText);
+
                 } else {
                     txtMoonRise.setText("Księżyc nie wschodzi tego dnia");
                 }
 
                 if (moonSet != null) {
                     String setTime = moonSet.format(DateTimeFormatter.ofPattern("HH:mm"));
-                    txtMoonSet.setText("Moonset: \n" + setTime);
+                    String moonsetText = getString(R.string.moonset)+ "\n" + setTime;
+                    txtMoonSet.setText(moonsetText);
                 } else {
                     txtMoonSet.setText("Księżyc nie zachodzi tego dnia");
                 }
@@ -201,7 +331,19 @@ public class Calculated extends AppCompatActivity {
         }
     }
 
+    private void showRandomFact() {
+        Random random = new Random();
+        int index = random.nextInt(ciekawostki.length);
+        String randomFact = getString(ciekawostki[index]);
 
+        AlertDialog.Builder builder = new AlertDialog.Builder(this);
+        builder.setTitle(getString(R.string.fact));
+        builder.setMessage(randomFact);
+        builder.setPositiveButton("OK!", null); // Dodajemy przycisk OK
+
+        AlertDialog dialog = builder.create();
+        dialog.show();
+    }
 
 
     @Override
@@ -210,6 +352,9 @@ public class Calculated extends AppCompatActivity {
         Intent resumeIntent = new Intent(this, MusicService.class);
         resumeIntent.setAction("com.example.moonlover.ACTION_RESUME");
         startService(resumeIntent);
+
+        String savedLanguage = getSavedLanguage();
+        setLanguage(savedLanguage);
     }
 
     @Override
@@ -224,6 +369,12 @@ public class Calculated extends AppCompatActivity {
     public void finish() {
         super.finish();
         overridePendingTransition(R.anim.slide_in_left,R.anim.slide_out_right);
+    }
+
+    public void openMainPage() {
+        Intent openMain = new Intent(this, MainActivity.class);
+        startActivity(openMain);
+        overridePendingTransition(R.anim.slide_in_right, R.anim.slide_out_left);
     }
 
 

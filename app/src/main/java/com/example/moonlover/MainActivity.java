@@ -1,17 +1,25 @@
 package com.example.moonlover;
 
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.preference.PreferenceManager;
+
 import android.content.Intent;
+import android.content.SharedPreferences;
+import android.content.res.Configuration;
+import android.content.res.Resources;
 import android.os.Bundle;
+import android.view.View;
 import android.widget.Button;
 import android.widget.ImageButton;
 import android.widget.ImageView;
 
 import com.bumptech.glide.Glide;
 
+import java.util.Locale;
+
 public class MainActivity extends AppCompatActivity {
 
-    private ImageButton pauseButton;
+    private ImageButton settingsButton, btnLets;
     private Intent music;
     private boolean isMusicPlaying = true;
 
@@ -20,38 +28,50 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        ImageView backgroundImageView = findViewById(R.id.imageBackground);
-        Glide.with(this).asGif().load(R.drawable.andromeda_animated).into(backgroundImageView);
+
+        String savedLanguage = getSavedLanguage();
+        setLanguage(savedLanguage);
+
+        ImageView backgroundImageView = findViewById(R.id.imgBackground);
+        Glide.with(this).asGif().load(R.drawable.andromeda).into(backgroundImageView);
 
 
         music = new Intent(this, MusicService.class);
         startService(music);
 
 
-        Button btnLets = findViewById(R.id.btnLetsStart);
+        btnLets = findViewById(R.id.btnLetsStart);
         btnLets.setOnClickListener(v -> {
             openMainPage();
         });
 
-        pauseButton = findViewById(R.id.imgbSoundButton);
-        pauseButton.setOnClickListener(v -> {
-            Intent pauseIntent = new Intent(this, MusicService.class);
-            if (isMusicPlaying) {
-                pauseIntent.setAction("com.example.moonlover.ACTION_MUTE");
-//                pauseButton.setImageResource(R.drawable.muted);
-                pauseButton.setImageResource(android.R.drawable.ic_lock_silent_mode);
-                isMusicPlaying = false;
-            } else {
-                pauseIntent.setAction("com.example.moonlover.ACTION_UNMUTE");
-                pauseButton.setImageResource(android.R.drawable.ic_lock_silent_mode_off);
-                Intent resumeIntent = new Intent(this, MusicService.class);
-                startService(resumeIntent);
-                isMusicPlaying = true;
-            }
-            startService(pauseIntent);
+        settingsButton = findViewById(R.id.imgSettingsButton);
+        settingsButton.setOnClickListener(v -> {
+            openSettings();
         });
 
 
+
+
+    }
+
+    public static final String PREF_LANGUAGE = "pref_language";
+
+
+    public void setLanguage(String languageCode){
+        Resources resources = this.getResources();
+        Configuration configuration = resources.getConfiguration();
+        Locale locale = new Locale(languageCode);
+        locale.setDefault(locale);
+        configuration.setLocale(locale);
+        resources.updateConfiguration(configuration,
+                resources.getDisplayMetrics());
+    }
+
+
+    public String getSavedLanguage() {
+        SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(this);
+        return sharedPreferences.getString(PREF_LANGUAGE, "");
     }
 
 
@@ -61,6 +81,8 @@ public class MainActivity extends AppCompatActivity {
         Intent resumeIntent = new Intent(this, MusicService.class);
         resumeIntent.setAction("com.example.moonlover.ACTION_PLAY");
         startService(resumeIntent);
+        String savedLanguage = getSavedLanguage();
+        setLanguage(savedLanguage);
     }
 
     @Override
@@ -81,6 +103,11 @@ public class MainActivity extends AppCompatActivity {
         Intent openMain = new Intent(this, Calculated.class);
         startActivity(openMain);
         overridePendingTransition(R.anim.slide_in_right, R.anim.slide_out_left);
+    }
+    public void openSettings() {
+        Intent openSettings = new Intent(this, Settings.class);
+        startActivity(openSettings);
+        overridePendingTransition(R.anim.slide_in_left, R.anim.slide_out_right);
     }
 
 

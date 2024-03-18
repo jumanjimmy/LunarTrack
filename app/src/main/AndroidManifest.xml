@@ -18,14 +18,22 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.AppCompat.NoActionBar"
         tools:targetApi="31">
+        <activity
+            android:name=".Settings"
+            android:exported="true"
+            android:configChanges="locale"
+            android:theme="@style/AppTheme.NoActionBar" />
 
         <service android:name=".MusicService" />
 
         <activity
             android:name=".Calculated"
-            android:exported="false" />
+            android:theme="@style/AppTheme.NoActionBar"
+            android:configChanges="locale"
+            android:exported="true" />
         <activity
             android:name=".MainActivity"
+            android:theme="@style/AppTheme.NoActionBar"
             android:exported="true">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />

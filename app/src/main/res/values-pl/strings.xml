@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="menu_choose_language">Język:</string>
+    <string name="music_off">Muzyka wyłączona</string>
+    <string name="music_on">Muzyka włączona</string>
+    <string name="select_date">WYBIERZ DATĘ</string>
+
+    <string name="new_moon">NÓW</string>
+    <string name="waxing_crescent">SIERP PRZYBYWAJĄCY</string>
+    <string name="first_quarter">PIERWSZA KWADRA</string>
+    <string name="waxing_gibbous">GARB PRZYBYWAJĄCY</string>
+    <string name="full_moon">PEŁNIA</string>
+    <string name="waning_gibbous">GARB UBYWAJĄCY</string>
+    <string name="last_quarter">TRZECIA KWADRA</string>
+    <string name="waning_crescent">SIERP UBYWAJĄCY</string>
+    <string name="days_to_full">Dni do następnej pełni:</string>
+    <string name="moonrise">Wschodzi:</string>
+    <string name="moonset">Zachodzi:</string>
+    <string name="fact">Czy wiesz, że…</string>
+    <string name="info">
+    Użyta biblioteka: Suncalc by Shredzone
+    Minimalna wersja Androida: 8.0 (API 26)
+    Wersja aplikacji: 1.0 beta
+</string>
+    <string name="fact1">Księżyc oddala się od Ziemi z prędkością około 3,8 centymetra rocznie. Oznacza to, że w ciągu miliona lat Księżyc oddali się od nas o około 3800 kilometrów!</string>
+    <string name="fact2">Ciemne, płaskie obszary na powierzchni Księżyca nazywane są "maria" (łac. "morza"). Jednak mimo nazwy, te obszary nie są wypełnione wodą. Są to starożytne potoki lawy bazaltowej, które stwardniały miliardy lat temu.</string>
+    <string name="fact3">Pierwsze lądowanie człowieka na Księżycu miało miejsce 20 lipca 1969 roku, podczas misji Apollo 11 NASA. Od tego czasu, w sumie sześć misji Apollo z powodzeniem wylądowało astronautów na powierzchni Księżyca, przy czym ostatnia misja to Apollo 17 w 1972 roku.</string>
+    <string name="fact4">Program Artemis NASA ma na celu powrót ludzi na Księżyc do 2024 roku. Misja ta będzie polegać na wysłaniu pierwszej kobiety i kolejnego mężczyzny na powierzchnię Księżyca, przeprowadzeniu badań naukowych, ustanowieniu zrównoważonych systemów eksploracji i przygotowaniu do przyszłych załogowych misji na Marsa.</string>
+    <string name="fact5">Najbardziej akceptowaną teorią powstania Księżyca jest hipoteza olbrzymiego uderzenia. Sugeruje ona, że obiekt o rozmiarach zbliżonych do Marsa zderzył się z wczesną Ziemią, wyrzucając odłamki w przestrzeń kosmiczną. Te odłamki ostatecznie połączyły się, tworząc Księżyc.</string>
+    <string name="fact6">Z biegiem czasu odległość Księżyca od Ziemi będzie nadal wzrastać z powodu oddziaływań pływowych. Ostatecznie osiągnie punkt, w którym Księżyc będzie wydawał się mniejszy na niebie, a jego wpływ grawitacyjny na Ziemię może stać się mniej zauważalny. Jednak ten proces potrwa miliardy lat.</string>
+    <!--    <string name="fact7">Grawitacyjne oddziaływanie Księżyca powoduje pływy na Ziemi, powodując regularne przypływy i odpływy wód oceanicznych. Te siły pływowe są wynikiem przyciągania grawitacyjnego Księżyca i tworzą zjawisko pływów, które obserwujemy w oceanach, morzach, a nawet w wodach śródlądowych. Wpływ Księżyca na wodę Ziemi to fascynujący przykład tego, jak ciała niebieskie mogą mieć bezpośredni wpływ na naturalne procesy naszej planety.</string>-->
+    <string name="fact8">Księżyc ma około 4,5 miliarda lat, mniej więcej tyle samo co Ziemia. Powstał z pozostałości po olbrzymim zderzeniu między Ziemią a obiektem o rozmiarach zbliżonych do Marsa we wczesnym okresie historii Układu Słonecznego.</string>
+    <string name="fact9">Powierzchnia Księżyca jest pokryta sypkim pyłem zwany regolitem. Ta warstwa luźnego materiału przypominającego glebę jest wynikiem miliardów lat uderzeń meteorytów, które rozpadają skały na małe fragmenty.</string>
+    <string name="fact10">Księżyc ma bardzo surowe i ekstremalne warunki. Temperatury na powierzchni Księżyca mogą się wahać od ekstremalnie wysokich (+127 stopni Celsjusza) w ciągu dnia do ekstremalnie niskich (-173 stopnie Celsjusza) w nocy.</string>
+
+</resources>

@@ -1,19 +1,55 @@
 <resources>
-    <string name="app_name">Moon Lover</string>
-    <string name="title_activity_settings">SettingsActivity</string>
+    <string name="app_name" translatable="false">Moon Lover</string>
+    <string name="title_activity_settings" translatable="false">SettingsActivity</string>
 
     <!-- Preference Titles -->
-    <string name="messages_header">Messages</string>
-    <string name="sync_header">Sync</string>
+    <string name="messages_header" translatable="false">Messages</string>
+    <string name="sync_header" translatable="false">Sync</string>
 
     <!-- Messages Preferences -->
-    <string name="signature_title">Your signature</string>
-    <string name="reply_title">Default reply action</string>
+    <string name="signature_title" translatable="false">Your signature</string>
+    <string name="reply_title" translatable="false">Default reply action</string>
 
     <!-- Sync Preferences -->
-    <string name="sync_title">Sync email periodically</string>
-    <string name="attachment_title">Download incoming attachments</string>
-    <string name="attachment_summary_on">Automatically download attachments for incoming emails
+    <string name="sync_title" translatable="false">Sync email periodically</string>
+    <string name="attachment_title" translatable="false">Download incoming attachments</string>
+    <string name="attachment_summary_on" translatable="false">Automatically download attachments for incoming emails
     </string>
-    <string name="attachment_summary_off">Only download attachments when manually requested</string>
+    <string name="attachment_summary_off" translatable="false">Only download attachments when manually requested</string>
+    <string name="i" translatable="false">i</string>
+
+
+    <string name="menu_choose_language">Language:</string>
+    <string name="music_off">Music OFF</string>
+    <string name="music_on">Music ON</string>
+    <string name="select_date">SELECT DATE</string>
+    <string name="new_moon">NEW MOON</string>
+    <string name="waxing_crescent">WAXING CRESCENT</string>
+    <string name="first_quarter">FIRST QUARTER</string>
+    <string name="waxing_gibbous">WAXING GIBBOUS</string>
+    <string name="full_moon">FULL MOON</string>
+    <string name="waning_gibbous">WANING GIBBOUS</string>
+    <string name="last_quarter">LAST QUARTER</string>
+    <string name="waning_crescent">WANING CRESCENT</string>
+    <string name="moonrise">Moonrise:</string>
+    <string name="moonset">Moonset:</string>
+    <string name="fact">Fact:</string>
+    <string name="info">
+    Used library: Suncalc by Shredzone
+    Minimum Android version: 8.0 (API 26)
+    Application version: 1.0 beta
+</string>
+    <string name="days_to_full">Days to next Full Moon:</string>
+    <string name="fact1">The Moon is moving away from Earth at a rate of about 3.8 centimeters per year. This means that over the course of a million years, the Moon will have moved about 3,800 kilometers farther from us!</string>
+    <string name="fact2">The dark, flat areas on the Moon\'s surface are called "maria" (Latin for "seas"). However, despite their name, these areas are not actually filled with water. They are ancient basaltic lava flows that solidified billions of years ago.</string>
+    <string name="fact3">The first human landing on the Moon took place on July 20, 1969, during NASA\'s Apollo 11 mission. Since then, a total of six Apollo missions successfully landed astronauts on the lunar surface, with the last mission being Apollo 17 in 1972</string>
+    <string name="fact4">NASA\'s Artemis program aims to return humans to the Moon by 2024. This mission will involve sending the first woman and the next man to the lunar surface, conducting scientific research, establishing sustainable exploration systems, and preparing for future crewed missions to Mars</string>
+    <string name="fact5">The most widely accepted theory of the Moon\'s formation is the giant impact hypothesis. It suggests that a Mars-sized object collided with the early Earth, ejecting debris into space. This debris eventually coalesced to form the Moon.</string>
+    <string name="fact6">Over time, the Moon\'s distance from Earth will continue to increase due to tidal interactions. Eventually, it will reach a point where the Moon will appear smaller in the sky, and its gravitational influence on Earth may become less pronounced. However, this process will take billions of years to unfold.</string>
+<!--    <string name="fact7">The Moon\'s gravitational pull creates tides on Earth, causing the regular rise and fall of ocean waters. These tidal forces are a result of the Moon\'s gravitational attraction, and they create the phenomenon of tides that we observe in the oceans, seas, and even in inland bodies of water. The Moon's influence on Earth's water is an intriguing example of how celestial bodies can have a direct impact on our planet's natural processes.</string>-->
+    <string name="fact8">The Moon is approximately 4.5 billion years old, roughly the same age as Earth. It formed from the debris left over after a giant impact between Earth and a Mars-sized body early in the history of the solar system.</string>
+    <string name="fact9">The Moon has a surface covered in powdery dust called regolith. This layer of loose soil-like material is the result of billions of years of meteoroid impacts breaking down rocks into small fragments.</string>
+    <string name="fact10">The Moon has a very harsh and extreme environment. Temperatures on the lunar surface can range from extremely hot (+127 degrees Celsius) during the day to extremely cold (-173 degrees Celsius) at night.</string>
+
+
 </resources>
